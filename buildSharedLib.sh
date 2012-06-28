@@ -9,12 +9,14 @@ javah \
    clangcompletion.LibClang \
    || exit $?
 
-gcc \
+clang \
    -shared \
    -fPIC \
-   -o build/libClangCompletionPluginLibClang.so \
-   c-src/*.c \
+   -Wall \
+   -Werror \
    -I$1/../include \
    -lclang \
+   -o build/libClangCompletionPluginLibClang.so \
+   c-src/*.c \
    || exit $?
 

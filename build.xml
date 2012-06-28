@@ -27,7 +27,7 @@
    </path>
 
    <target name="build.post">
-      <exec dir="${basedir}" executable="${basedir}/buildSharedLib.sh">
+      <exec dir="${basedir}" executable="${basedir}/buildSharedLib.sh" failonerror="true">
          <arg value="${java.home}" />
       </exec>
       <copy todir="${jedit.plugins.dir}">
