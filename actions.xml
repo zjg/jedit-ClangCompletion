@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<!DOCTYPE ACTIONS SYSTEM "actions.dtd">
+<ACTIONS>
+   <ACTION NAME="ccclient.menuitem">
+      <CODE>
+      </CODE>
+   </ACTION>
+</ACTIONS>

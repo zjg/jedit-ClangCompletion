@@ -1,0 +1,41 @@
+
+# general plugin properites
+plugin.clangcompletion.ClangCompletionPlugin.name=ClangCompletion
+plugin.clangcompletion.ClangCompletionPlugin.author=Doug Rosvick
+plugin.clangcompletion.ClangCompletionPlugin.version=0.1
+plugin.clangcompletion.ClangCompletionPlugin.docs=index.html
+plugin.clangcompletion.ClangCompletionPlugin.description=C/C++ code completion using Clang/LLVM
+
+plugin.clangcompletion.ClangCompletionPlugin.activate=startup
+plugin.clangcompletion.ClangCompletionPlugin.usePluginHome=true
+plugin.clangcompletion.ClangCompletionPlugin.files=
+plugin.clangcompletion.ClangCompletionPlugin.jars=
+
+# dependencies
+plugin.clangcompletion.ClangCompletionPlugin.depend.0=jdk 1.6
+plugin.clangcompletion.ClangCompletionPlugin.depend.1=jedit 05.01.01.00
+plugin.clangcompletion.ClangCompletionPlugin.depend.2=plugin completion.CompletionPlugin 0.3
+plugin.clangcompletion.ClangCompletionPlugin.depend.3=plugin CommonControlsPlugin 1.5
+# plugin.CCClient.depend.3=plugin jnaplugin.JNAPlugin 3.2.4
+# plugin.CCClient.depend.7=plugin SuperAbbrevsPlugin 0.32
+# plugin.CCClient.depend.2=plugin errorlist.ErrorListPlugin 1.9
+# plugin.CCClient.depend.4=plugin projectviewer.ProjectPlugin 3.0.1
+
+# option panes
+plugin.clangcompletion.ClangCompletionPlugin.option-pane=\
+	clangcompletion_general
+options.clangcompletion_general.label=ClangCompletion
+options.clangcompletion_general.code=new clangcompletion.GeneralOptionsPane();
+
+# actions
+plugin.clangcompletion.ClangCompletionPlugin.menu=\
+   clangcompletion.menuitem
+clangcompletion.menuitem.label=Menu Item
+
+# messages
+# messages.includeDirs=Include Directories
+
+
+# window title
+clangcompletion.title=ClangCompletion
+
