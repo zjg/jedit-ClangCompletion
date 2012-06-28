@@ -26,18 +26,15 @@
       -->
    </path>
 
-   <!-- not sure how to make this work... just running manually for now
-   <javah destdir="c-src">
-      <class name="clangcompletion.LibClang" />
-   </javah>
-   -->
-
-	<target name="build.post">
-		<copy todir="${install.dir}">
-			<fileset dir="build">
-				<include name="*.so" />
-			</fileset>
-		</copy>
-	</target>
+   <target name="build.post">
+      <exec dir="${basedir}" executable="${basedir}/buildSharedLib.sh">
+         <arg value="${java.home}" />
+      </exec>
+      <copy todir="${jedit.plugins.dir}">
+         <fileset dir="build">
+            <include name="*.so" />
+         </fileset>
+      </copy>
+   </target>
 
 </project>

@@ -8,7 +8,12 @@ public class LibClang
 {
    static
    {
-      String pluginPath = jEdit.getJEditHome() + "/jars";
+      String root = jEdit.getSettingsDirectory();
+      if (root == null)
+      {
+         root = jEdit.getJEditHome();
+      }
+      String pluginPath = root + "/jars";
 
       // String libPath = System.getProperty("java.library.path");
       // if (libPath.length() > 0)
