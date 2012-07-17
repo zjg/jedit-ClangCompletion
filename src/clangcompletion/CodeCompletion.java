@@ -53,11 +53,16 @@ public class CodeCompletion implements CompletionProvider
       // start token (not within a word)
       column -= CompletionUtil.getCompletionPrefix(view).length();
 
+      Log.log(Log.DEBUG, this, "cursor type: " + LibClang.getCursorType(ta.getCaretPosition()));
+      
+      // jEdit's line/column are 0-indexed, but clang expects 1-indexed
+      String[] results = LibClang.getCompletions(line + 1, column + 1);
+      
       List<CompletionCandidate> codeCompletions = new ArrayList<CompletionCandidate>();
-      // for (String result : response.results)
-      // {
-      //    codeCompletions.add(new BaseCompletionCandidate(result));
-      // }
+      for (String result : results)
+      {
+         codeCompletions.add(new BaseCompletionCandidate(result));
+      }
       return codeCompletions;
    }
 

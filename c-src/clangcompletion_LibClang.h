@@ -39,6 +39,22 @@ JNIEXPORT void JNICALL Java_clangcompletion_LibClang_shutdown
 JNIEXPORT jboolean JNICALL Java_clangcompletion_LibClang_setCurrentFile
   (JNIEnv *, jclass, jstring);
 
+/*
+ * Class:     clangcompletion_LibClang
+ * Method:    getCursorType
+ * Signature: (I)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_clangcompletion_LibClang_getCursorType
+  (JNIEnv *, jclass, jint);
+
+/*
+ * Class:     clangcompletion_LibClang
+ * Method:    getCompletions
+ * Signature: (II)[Ljava/lang/String;
+ */
+JNIEXPORT jobjectArray JNICALL Java_clangcompletion_LibClang_getCompletions
+  (JNIEnv *, jclass, jint, jint);
+
 #ifdef __cplusplus
 }
 #endif

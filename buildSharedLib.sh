@@ -10,6 +10,7 @@ javah \
    || exit $?
 
 clang \
+   -g \
    -shared \
    -fPIC \
    -Wall \

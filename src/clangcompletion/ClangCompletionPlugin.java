@@ -12,6 +12,7 @@ import org.gjt.sp.jedit.EditPane;
 import org.gjt.sp.jedit.MiscUtilities;
 import org.gjt.sp.jedit.jEdit;
 import org.gjt.sp.jedit.msg.EditPaneUpdate;
+import org.gjt.sp.jedit.msg.PositionChanging;
 import org.gjt.sp.util.Log;
 
 import clangcompletion.LibClang;
@@ -46,12 +47,16 @@ public class ClangCompletionPlugin extends EBPlugin
             EditPane pane = paneUpdate.getEditPane();
             Buffer buf = pane.getBuffer();
 
-            boolean parsedOkay = LibClang.setCurrentFile(buf.getPath());
-
-            if (parsedOkay)
-               Log.log(Log.DEBUG, this, "parsed " + buf.getPath());
-            else
-               Log.log(Log.DEBUG, this, "failed to parse " + buf.getPath());
+            if ((buf.getMode() == jEdit.getMode("c++"))
+                || (buf.getMode() == jEdit.getMode("c")))
+            {
+               boolean parsedOkay = LibClang.setCurrentFile(buf.getPath());
+   
+               if (parsedOkay)
+                  Log.log(Log.DEBUG, this, "parsed " + buf.getPath());
+               else
+                  Log.log(Log.DEBUG, this, "failed to parse " + buf.getPath());
+            }
          }
       }
    }

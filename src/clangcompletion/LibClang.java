@@ -14,18 +14,9 @@ public class LibClang
          root = jEdit.getJEditHome();
       }
       String pluginPath = root + "/jars";
-
-      // String libPath = System.getProperty("java.library.path");
-      // if (libPath.length() > 0)
-      // {
-      //    libPath += ":";
-      // }
-      // libPath += pluginPath;
-      // System.setProperty("java.library.path", libPath);
-
-      // Log.log(Log.DEBUG, null, "java.library.path: " + System.getProperty("java.library.path"));
-      // System.loadLibrary("ClangCompletionPluginLibClang");
-
+      
+      // todo - don't use the system loader, we need to use a custom classloader
+      // in order to be able to unload the shared library when the plugin is unloaded
       System.load(pluginPath + "/libClangCompletionPluginLibClang.so");
    }
 
@@ -35,4 +26,7 @@ public class LibClang
    static public native void shutdown();
 
    static public native boolean setCurrentFile(String filePath);
+   static public native String getCursorType(int fileOffset);
+   
+   static public native String[] getCompletions(int line, int column);
 }
