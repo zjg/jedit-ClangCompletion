@@ -74,6 +74,7 @@ public class GeneralOptionsPane extends AbstractOptionPane
 		cons.fill = GridBagConstraints.HORIZONTAL;
 		cons.gridwidth = GridBagConstraints.REMAINDER;
 		cons.weightx = 1.0f;
+		cons.weighty = 1.0f;
 		cons.gridy = 0;
 		cons.gridx = 0;
 

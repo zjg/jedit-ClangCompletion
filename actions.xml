@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ACTIONS SYSTEM "actions.dtd">
 <ACTIONS>
-   <ACTION NAME="ccclient.menuitem">
+   <ACTION NAME="clangcompletion.menuitem">
       <CODE>
       </CODE>
    </ACTION>

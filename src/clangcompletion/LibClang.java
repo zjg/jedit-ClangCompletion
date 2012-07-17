@@ -1,32 +1,56 @@
 
 package clangcompletion;
 
-// import org.gjt.sp.util.Log;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
+
+import org.gjt.sp.util.Log;
 import org.gjt.sp.jedit.jEdit;
 
 public class LibClang
 {
-   static
+   static public String getClangVersion()
    {
-      String root = jEdit.getSettingsDirectory();
-      if (root == null)
-      {
-         root = jEdit.getJEditHome();
+      String version = "unknown";
+      try {
+         Process p = new ProcessBuilder("clang", "-v").redirectErrorStream(true).start();
+         BufferedReader stdOut = new BufferedReader(new InputStreamReader(p.getInputStream()));
+         version = stdOut.readLine();
+         int rval = p.waitFor();
+         if (rval != 0)
+         {
+            Log.log(Log.ERROR, null, "Clang process returned: " + rval);
+         }
+      } catch (IOException e) {
+         e.printStackTrace();
+      } catch (InterruptedException e) {
+         e.printStackTrace();
       }
-      String pluginPath = root + "/jars";
       
-      // todo - don't use the system loader, we need to use a custom classloader
-      // in order to be able to unload the shared library when the plugin is unloaded
-      System.load(pluginPath + "/libClangCompletionPluginLibClang.so");
+      return version;
    }
 
-   static public native String getClangVersion();
-
-   static public native void startup();
-   static public native void shutdown();
-
-   static public native boolean setCurrentFile(String filePath);
-   static public native String getCursorType(int fileOffset);
+   static public void startup()
+   {
+   }
    
-   static public native String[] getCompletions(int line, int column);
+   static public void shutdown()
+   {
+   }
+
+   static public boolean setCurrentFile(String filePath)
+   {
+      return false;
+   }
+   
+   static public String getCursorType(int fileOffset)
+   {
+      return "<none>";
+   }
+
+   static public String[] getCompletions(int line, int column)
+   {
+      return new String[0];
+   }
 }

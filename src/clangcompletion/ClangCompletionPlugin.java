@@ -19,14 +19,14 @@ import clangcompletion.LibClang;
 
 public class ClangCompletionPlugin extends EBPlugin
 {
-   public static final String NAME = "ClangCompletion";
-   public static final String OPTION = "options.ClangCompletion.";
-   public static final String MESSAGE = "messages.ClangCompletion.";
+   public static final String NAME = "clangcompletion";
+   public static final String OPTION = "options." + NAME + ".";
+   public static final String MESSAGE = "messages." + NAME + ".";
 
    @Override
    public void start()
    {
-      Log.log(Log.DEBUG, this, LibClang.getClangVersion());
+      Log.log(Log.MESSAGE, this, LibClang.getClangVersion());
       LibClang.startup();
    }
 
@@ -39,25 +39,25 @@ public class ClangCompletionPlugin extends EBPlugin
    @Override
    public void handleMessage(EBMessage message)
    {
-      if (message instanceof EditPaneUpdate)
-      {
-         EditPaneUpdate paneUpdate = (EditPaneUpdate)message;
-         if (paneUpdate.getWhat() == EditPaneUpdate.BUFFER_CHANGED)
-         {
-            EditPane pane = paneUpdate.getEditPane();
-            Buffer buf = pane.getBuffer();
+      // if (message instanceof EditPaneUpdate)
+      // {
+      //    EditPaneUpdate paneUpdate = (EditPaneUpdate)message;
+      //    if (paneUpdate.getWhat() == EditPaneUpdate.BUFFER_CHANGED)
+      //    {
+      //       EditPane pane = paneUpdate.getEditPane();
+      //       Buffer buf = pane.getBuffer();
 
-            if ((buf.getMode() == jEdit.getMode("c++"))
-                || (buf.getMode() == jEdit.getMode("c")))
-            {
-               boolean parsedOkay = LibClang.setCurrentFile(buf.getPath());
+      //       if ((buf.getMode() == jEdit.getMode("c++"))
+      //           || (buf.getMode() == jEdit.getMode("c")))
+      //       {
+      //          boolean parsedOkay = LibClang.setCurrentFile(buf.getPath());
    
-               if (parsedOkay)
-                  Log.log(Log.DEBUG, this, "parsed " + buf.getPath());
-               else
-                  Log.log(Log.DEBUG, this, "failed to parse " + buf.getPath());
-            }
-         }
-      }
+      //          if (parsedOkay)
+      //             Log.log(Log.DEBUG, this, "parsed " + buf.getPath());
+      //          else
+      //             Log.log(Log.DEBUG, this, "failed to parse " + buf.getPath());
+      //       }
+      //    }
+      // }
    }
 }

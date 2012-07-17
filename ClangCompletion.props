@@ -28,13 +28,12 @@ options.clangcompletion_general.label=ClangCompletion
 options.clangcompletion_general.code=new clangcompletion.GeneralOptionsPane();
 
 # actions
-plugin.clangcompletion.ClangCompletionPlugin.menu=\
-   clangcompletion.menuitem
-clangcompletion.menuitem.label=Menu Item
+# plugin.clangcompletion.ClangCompletionPlugin.menu=\
+#    clangcompletion.menuitem
+# clangcompletion.menuitem.label=Menu Item
 
 # messages
-# messages.includeDirs=Include Directories
-
+messages.clangcompletion.includeDirs=Include Directories
 
 # window title
 clangcompletion.title=ClangCompletion
