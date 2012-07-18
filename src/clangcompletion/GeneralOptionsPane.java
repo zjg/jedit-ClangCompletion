@@ -1,39 +1,46 @@
 
 package clangcompletion;
 
-import java.util.List;
-import java.util.ArrayList;
+import java.util.Enumeration;
 
 import java.awt.Component;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.JRadioButton;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
 
 import org.gjt.sp.jedit.AbstractOptionPane;
 import org.gjt.sp.jedit.GUIUtilities;
-import org.gjt.sp.jedit.gui.RolloverButton;
 import org.gjt.sp.jedit.jEdit;
 
 public class GeneralOptionsPane extends AbstractOptionPane
 {
-	static public final String OPTION = ClangCompletionPlugin.OPTION;
-	static public final String MESSAGE = ClangCompletionPlugin.MESSAGE;
-
-	static public final String INCLUDE_DIRS = "includeDirs";
-
-   JList includeDirsList;
-   DefaultListModel includeDirsModel;
-
+   public enum CommandLineSource
+   {
+      MANUAL_INCLUDE_PATHS,
+      BUILD_COMMAND_LINE_FILES
+   }
+   
+   JRadioButton useManualIncludePaths;
+   JRadioButton useBuildCommandLineFiles;
+   ButtonGroup commandLineSourceGroup;
+   
+   static private final String OPTION = ClangCompletionPlugin.OPTION;
+   static private final String MESSAGE = ClangCompletionPlugin.MESSAGE;
+   
+   static private final String COMMAND_LINE_SOURCE = "commandLineSource";
+   
    public GeneralOptionsPane()
    {
       super("clangcompletion_general");
@@ -43,115 +50,55 @@ public class GeneralOptionsPane extends AbstractOptionPane
    {
       setBorder(new EmptyBorder(5, 5, 5, 5));
 
-      // create widget data models
-      includeDirsModel = new DefaultListModel();
-      List<String> dirs = getIncludeDirs();
-      for (String dir : dirs)
+      useManualIncludePaths = new JRadioButton("Use Manual Include Paths", true);
+      useManualIncludePaths.setActionCommand(CommandLineSource.MANUAL_INCLUDE_PATHS.toString());
+      useBuildCommandLineFiles = new JRadioButton("Use Build Command Line Files");
+      useBuildCommandLineFiles.setActionCommand(CommandLineSource.BUILD_COMMAND_LINE_FILES.toString());
+      
+      JPanel commandLineSource = new JPanel(new FlowLayout(FlowLayout.LEFT));
+      commandLineSource.setBorder(new EtchedBorder());
+      commandLineSource.add(useManualIncludePaths);
+      commandLineSource.add(useBuildCommandLineFiles);
+      addComponent(commandLineSource);
+      
+      commandLineSourceGroup = new ButtonGroup();
+      commandLineSourceGroup.add(useManualIncludePaths);
+      commandLineSourceGroup.add(useBuildCommandLineFiles);
+      
+      Enumeration<AbstractButton> radioButtons = commandLineSourceGroup.getElements();
+      while (radioButtons.hasMoreElements())
       {
-         includeDirsModel.addElement(dir);
+         AbstractButton btn = (AbstractButton)radioButtons.nextElement();
+         if (btn.getActionCommand() == jEdit.getProperty(OPTION + COMMAND_LINE_SOURCE))
+         {
+            btn.setSelected(true);
+         }
       }
-
-      // create widgets
-      includeDirsList = new JList(includeDirsModel);
-		JScrollPane dirsScroller = new JScrollPane(includeDirsList);
-
-		JPanel buttons = new JPanel();
-		JButton dirAdd = new RolloverButton(GUIUtilities.loadIcon("Plus.png"));
-		buttons.add(dirAdd);
-		JButton dirRemove = new RolloverButton(GUIUtilities.loadIcon("Minus.png"));
-		buttons.add(dirRemove);
-
-		// create layouts
-		JPanel dirsPanel = new JPanel();
-		GridBagLayout dirsLayout = new GridBagLayout();
-		dirsPanel.setLayout(dirsLayout);
-		dirsPanel.setBorder(BorderFactory.createTitledBorder(
-				jEdit.getProperty(MESSAGE + INCLUDE_DIRS)));
-
-		GridBagConstraints cons = new GridBagConstraints();
-		cons.anchor = GridBagConstraints.WEST;
-		cons.fill = GridBagConstraints.BOTH;
-		cons.gridwidth = GridBagConstraints.REMAINDER;
-		cons.weightx = 1.0f;
-		cons.weighty = 1.0f;
-		cons.gridy = 0;
-		cons.gridx = 0;
-
-		// add widgets to layouts
-		dirsLayout.setConstraints(dirsScroller, cons);
-		dirsPanel.add(dirsScroller);
-
-		cons.gridy++;
-		cons.fill = GridBagConstraints.NONE;
-		cons.weighty = 0.0f;
-		dirsLayout.setConstraints(buttons, cons);
-		dirsPanel.add(buttons);
-
-		// add panels to option pane
-		cons = new GridBagConstraints();
-		cons.fill = GridBagConstraints.BOTH;
-		cons.gridy = y++;
-		cons.gridwidth = GridBagConstraints.REMAINDER;
-		cons.gridheight = GridBagConstraints.REMAINDER;
-		cons.anchor = GridBagConstraints.WEST;
-		cons.weightx = 1.0f;
-		cons.weighty = 1.0f;
-		gridBag.setConstraints(dirsPanel, cons);
-		add(dirsPanel);
-		// addComponent(dirsPanel, GridBagConstraints.BOTH);
-
-		// add widget actions
-		dirAdd.addActionListener(new ActionListener() {
-		      public void actionPerformed(ActionEvent ae) { addIncludeDir(); }
-		   });
-		dirRemove.addActionListener(new ActionListener() {
-		      public void actionPerformed(ActionEvent ae) { removeIncludeDir(); }
-		   });
    }
 
    protected void _save()
    {
-      String propDirs = "";
-      for (Object dir : includeDirsModel.toArray())
-      {
-         propDirs += (String)dir + ";";
-      }
-      jEdit.setProperty(OPTION + INCLUDE_DIRS, propDirs);
+      jEdit.setProperty(OPTION + COMMAND_LINE_SOURCE, selectedCommandLineSource().toString());
    }
-
-   static public List<String> getIncludeDirs()
+   
+   static public CommandLineSource getCommandLineSource()
    {
-      List<String> dirs = new ArrayList<String>();
-      String propDirs = jEdit.getProperty(OPTION + INCLUDE_DIRS);
-      if (propDirs == null)
-      {
-         return dirs;
-      }
-
-      for (String dir : propDirs.split(";"))
-      {
-         dirs.add(dir);
-      }
-      return dirs;
+      return CommandLineSource.valueOf(
+         jEdit.getProperty(OPTION + COMMAND_LINE_SOURCE,
+                           CommandLineSource.MANUAL_INCLUDE_PATHS.toString()));
    }
-
-   private void addIncludeDir()
+      
+   private CommandLineSource selectedCommandLineSource()
    {
-      String dir = (String)JOptionPane.showInputDialog(
-         this, "Enter include directory:", "Clang Completion",
-         JOptionPane.QUESTION_MESSAGE);
-      if (dir != null)
+      Enumeration<AbstractButton> radioButtons = commandLineSourceGroup.getElements();
+      while (radioButtons.hasMoreElements())
       {
-         includeDirsModel.addElement(dir);
+         AbstractButton btn = (AbstractButton)radioButtons.nextElement();
+         if (btn.isSelected())
+         {
+            return CommandLineSource.valueOf(btn.getActionCommand());
+         }
       }
-   }
-
-   private void removeIncludeDir()
-   {
-      int i = includeDirsList.getSelectedIndex();
-      if (i >= 0)
-      {
-         includeDirsModel.removeElementAt(i);
-      }
+      return CommandLineSource.MANUAL_INCLUDE_PATHS;
    }
 }

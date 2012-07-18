@@ -16,16 +16,19 @@ plugin.clangcompletion.ClangCompletionPlugin.depend.0=jdk 1.6
 plugin.clangcompletion.ClangCompletionPlugin.depend.1=jedit 05.01.01.00
 plugin.clangcompletion.ClangCompletionPlugin.depend.2=plugin completion.CompletionPlugin 0.3
 plugin.clangcompletion.ClangCompletionPlugin.depend.3=plugin CommonControlsPlugin 1.5
-# plugin.CCClient.depend.3=plugin jnaplugin.JNAPlugin 3.2.4
-# plugin.CCClient.depend.7=plugin SuperAbbrevsPlugin 0.32
-# plugin.CCClient.depend.2=plugin errorlist.ErrorListPlugin 1.9
-# plugin.CCClient.depend.4=plugin projectviewer.ProjectPlugin 3.0.1
+# plugin.clangcompletion.ClangCompletionPlugin.depend.3=plugin jnaplugin.JNAPlugin 3.2.4
+# plugin.clangcompletion.ClangCompletionPlugin.depend.7=plugin SuperAbbrevsPlugin 0.32
+# plugin.clangcompletion.ClangCompletionPlugin.depend.2=plugin errorlist.ErrorListPlugin 1.9
+# plugin.clangcompletion.ClangCompletionPlugin.depend.4=plugin projectviewer.ProjectPlugin 3.0.1
 
 # option panes
-plugin.clangcompletion.ClangCompletionPlugin.option-pane=\
-	clangcompletion_general
-options.clangcompletion_general.label=ClangCompletion
+plugin.clangcompletion.ClangCompletionPlugin.option-group=\
+	clangcompletion_general \
+	clangcompletion_manualInclude
+options.clangcompletion_general.label=General
 options.clangcompletion_general.code=new clangcompletion.GeneralOptionsPane();
+options.clangcompletion_manualInclude.label=Manual Includes
+options.clangcompletion_manualInclude.code=new clangcompletion.ManualIncludeOptionsPane();
 
 # actions
 # plugin.clangcompletion.ClangCompletionPlugin.menu=\
@@ -33,8 +36,9 @@ options.clangcompletion_general.code=new clangcompletion.GeneralOptionsPane();
 # clangcompletion.menuitem.label=Menu Item
 
 # messages
-messages.clangcompletion.includeDirs=Include Directories
+messages.clangcompletion.includeDirs=Manual Include Directories
+messages.clangcompletion.enterIncludeDir=Enter include directory (absolute path):
 
 # window title
-clangcompletion.title=ClangCompletion
+clangcompletion.title=Clang Completion
 
