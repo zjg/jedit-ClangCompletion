@@ -11,7 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -71,7 +70,7 @@ public class GeneralOptionsPane extends AbstractOptionPane
 
 		GridBagConstraints cons = new GridBagConstraints();
 		cons.anchor = GridBagConstraints.WEST;
-		cons.fill = GridBagConstraints.HORIZONTAL;
+		cons.fill = GridBagConstraints.BOTH;
 		cons.gridwidth = GridBagConstraints.REMAINDER;
 		cons.weightx = 1.0f;
 		cons.weighty = 1.0f;
@@ -84,11 +83,22 @@ public class GeneralOptionsPane extends AbstractOptionPane
 
 		cons.gridy++;
 		cons.fill = GridBagConstraints.NONE;
+		cons.weighty = 0.0f;
 		dirsLayout.setConstraints(buttons, cons);
 		dirsPanel.add(buttons);
 
 		// add panels to option pane
-		addComponent(dirsPanel, GridBagConstraints.HORIZONTAL);
+		cons = new GridBagConstraints();
+		cons.fill = GridBagConstraints.BOTH;
+		cons.gridy = y++;
+		cons.gridwidth = GridBagConstraints.REMAINDER;
+		cons.gridheight = GridBagConstraints.REMAINDER;
+		cons.anchor = GridBagConstraints.WEST;
+		cons.weightx = 1.0f;
+		cons.weighty = 1.0f;
+		gridBag.setConstraints(dirsPanel, cons);
+		add(dirsPanel);
+		// addComponent(dirsPanel, GridBagConstraints.BOTH);
 
 		// add widget actions
 		dirAdd.addActionListener(new ActionListener() {

@@ -9,12 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.gjt.sp.util.Log;
-import org.gjt.sp.jedit.jEdit;
 
-public class LibClang
+import completion.service.CompletionCandidate;
+
+public class LocalClang
 {
-   private static String currentFile;
-   
    static public String getClangVersion()
    {
       String version = "unknown";
@@ -36,61 +35,49 @@ public class LibClang
       return version;
    }
 
-   static public void startup()
+   static public List<CompletionCandidate> getCompletions(String filePath, int line, int column)
    {
-   }
-   
-   static public void shutdown()
-   {
-   }
-
-   static public boolean setCurrentFile(String filePath)
-   {
-      currentFile = filePath;
-      return true;
-   }
-   
-   static public String getCursorType(int fileOffset)
-   {
-      return "<none>";
-   }
-
-   static public List<String> getCompletions(int line, int column)
-   {
-      if (currentFile == null)
-      {
-         return null;
-      }
-      
-      List<String> results = new ArrayList<String>();
-      
       List<String> cmdLine = new ArrayList<String>();
       cmdLine.add("clang");
       cmdLine.add("-cc1");
       cmdLine.add("-fsyntax-only");
-      cmdLine.add("-fno-caret-diagnostics");
-      cmdLine.add("-fdiagnostics-print-source-range-info");
+      
+      // add include dirs
+      for (String includeDir : GeneralOptionsPane.getIncludeDirs())
+      {
+         if (includeDir != null && !includeDir.trim().isEmpty())
+         {
+            cmdLine.add("-I" + includeDir);
+         }
+      }
+      
       cmdLine.add("-code-completion-at");
-      cmdLine.add(currentFile + ":" + line + ":" + column);
-      cmdLine.add(currentFile);
+      cmdLine.add(filePath + ":" + line + ":" + column);
+      cmdLine.add(filePath);
       
       Log.log(Log.DEBUG, null, cmdLine);
       
+      List<String> results = new ArrayList<String>();
       try {
-         Process p = new ProcessBuilder(cmdLine).redirectErrorStream(true).start();
+         Process p = new ProcessBuilder(cmdLine).start();
+         
          BufferedReader stdOut = new BufferedReader(new InputStreamReader(p.getInputStream()));
          String stdOutLine = stdOut.readLine();
          while (stdOutLine != null)
          {
-            System.err.println(stdOutLine);
-            
-            if (stdOutLine.startsWith("COMPLETION:"))
-            {
-               results.add(stdOutLine.replaceAll("COMPLETION: (.*) : .*", "$1"));
-            }
-            
+            // System.err.println(stdOutLine);
+            results.add(stdOutLine);
             stdOutLine = stdOut.readLine();
          }
+         
+         // BufferedReader stdErr = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+         // String stdErrLine = stdErr.readLine();
+         // while (stdErrLine != null)
+         // {
+         //    System.err.println(stdErrLine);
+         //    stdErrLine = stdErr.readLine();
+         // }
+         
          int rval = p.waitFor();
          if (rval != 0)
          {
@@ -102,6 +89,15 @@ public class LibClang
          e.printStackTrace();
       }
       
-      return results;
+      List<CompletionCandidate> codeCompletions = new ArrayList<CompletionCandidate>();
+      for (String result : results)
+      {
+         CompletionCandidate candidate = ClangCompletionUtils.parseCommandLineCompletion(result);
+         if (candidate != null)
+         {
+            codeCompletions.add(candidate);
+         }
+      }
+      return codeCompletions;
    }
 }
