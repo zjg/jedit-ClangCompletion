@@ -19,8 +19,9 @@ import org.gjt.sp.util.Log;
 
 import completion.service.CompletionCandidate;
 import completion.service.CompletionProvider;
+import completion.util.CodeCompletionType;
+import completion.util.CodeCompletionVariable;
 import completion.util.CompletionUtil;
-import completion.util.BaseCompletionCandidate;
 
 import clangcompletion.ClangCompletionPlugin;
 
@@ -53,15 +54,14 @@ public class CodeCompletion implements CompletionProvider
       // start token (not within a word)
       column -= CompletionUtil.getCompletionPrefix(view).length();
 
-      Log.log(Log.DEBUG, this, "cursor type: " + LibClang.getCursorType(ta.getCaretPosition()));
-      
       // jEdit's line/column are 0-indexed, but clang expects 1-indexed
-      String[] results = LibClang.getCompletions(line + 1, column + 1);
+      List<String> results = LibClang.getCompletions(line + 1, column + 1);
       
       List<CompletionCandidate> codeCompletions = new ArrayList<CompletionCandidate>();
       for (String result : results)
       {
-         codeCompletions.add(new BaseCompletionCandidate(result));
+         codeCompletions.add(new CodeCompletionVariable(
+            CodeCompletionType.UNKNOWN, result, "", "<docs>"));
       }
       return codeCompletions;
    }

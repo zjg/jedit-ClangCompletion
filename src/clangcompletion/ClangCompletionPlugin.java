@@ -39,25 +39,25 @@ public class ClangCompletionPlugin extends EBPlugin
    @Override
    public void handleMessage(EBMessage message)
    {
-      // if (message instanceof EditPaneUpdate)
-      // {
-      //    EditPaneUpdate paneUpdate = (EditPaneUpdate)message;
-      //    if (paneUpdate.getWhat() == EditPaneUpdate.BUFFER_CHANGED)
-      //    {
-      //       EditPane pane = paneUpdate.getEditPane();
-      //       Buffer buf = pane.getBuffer();
+      if (message instanceof EditPaneUpdate)
+      {
+         EditPaneUpdate paneUpdate = (EditPaneUpdate)message;
+         if (paneUpdate.getWhat() == EditPaneUpdate.BUFFER_CHANGED)
+         {
+            EditPane pane = paneUpdate.getEditPane();
+            Buffer buf = pane.getBuffer();
 
-      //       if ((buf.getMode() == jEdit.getMode("c++"))
-      //           || (buf.getMode() == jEdit.getMode("c")))
-      //       {
-      //          boolean parsedOkay = LibClang.setCurrentFile(buf.getPath());
+            if ((buf.getMode() == jEdit.getMode("c++"))
+                || (buf.getMode() == jEdit.getMode("c")))
+            {
+               boolean parsedOkay = LibClang.setCurrentFile(buf.getPath());
    
-      //          if (parsedOkay)
-      //             Log.log(Log.DEBUG, this, "parsed " + buf.getPath());
-      //          else
-      //             Log.log(Log.DEBUG, this, "failed to parse " + buf.getPath());
-      //       }
-      //    }
-      // }
+               if (parsedOkay)
+                  Log.log(Log.DEBUG, this, "parsed " + buf.getPath());
+               else
+                  Log.log(Log.DEBUG, this, "failed to parse " + buf.getPath());
+            }
+         }
+      }
    }
 }
